@@ -1,4 +1,4 @@
-package com.ics.tetris;
+package com.ics.tetwis;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,4 +1,4 @@
-package com.ics.tetris;
+package com.ics.tetwis;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
