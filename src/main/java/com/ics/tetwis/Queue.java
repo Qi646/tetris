@@ -1,3 +1,5 @@
+package com.ics.tetwis;
+
 public class Queue {
     private int[] queue;
     private int front, rear, size;

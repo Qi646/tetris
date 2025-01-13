@@ -1,11 +1,12 @@
 package com.ics.tetwis;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 
 public class HelloApplication extends Application {
     private static final int BOARD_WIDTH = 10;
@@ -28,6 +29,9 @@ public class HelloApplication extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawGrid(gc);
         // Initialize game components and start game loop here
+
+        // Example usage of colorCell method
+        colorCell(gc, 2, 3, Color.RED);
     }
 
     private void drawGrid(GraphicsContext gc) {
@@ -36,6 +40,11 @@ public class HelloApplication extends Application {
                 gc.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
+    }
+
+    private void colorCell(GraphicsContext gc, int x, int y, Color color) {
+        gc.setFill(color);
+        gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
     public static void main(String[] args) {
