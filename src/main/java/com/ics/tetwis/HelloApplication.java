@@ -32,6 +32,10 @@ public class HelloApplication extends Application {
 
         // Example usage of colorCell method
         colorCell(gc, 2, 3, Color.RED);
+
+        // Example usage of renderTetromino method
+        Tetromino tetromino = new Tetromino(0);
+        renderTetromino(gc, tetromino, Color.BLUE);
     }
 
     private void drawGrid(GraphicsContext gc) {
@@ -45,6 +49,22 @@ public class HelloApplication extends Application {
     private void colorCell(GraphicsContext gc, int x, int y, Color color) {
         gc.setFill(color);
         gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    public void renderTetromino(GraphicsContext gc, Tetromino tetromino, Color color) {
+        int[][] shape = tetromino.getShape();
+        int tetrominoX = tetromino.getX();
+        int tetrominoY = tetromino.getY();
+
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] == 1) {
+                    int gridX = tetrominoX + col;
+                    int gridY = tetrominoY + row;
+                    colorCell(gc, gridX, gridY, color);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
