@@ -10,9 +10,6 @@ public class Queue {
     }
 
     public void enqueue(int value) {
-        if (size == queue.length) {
-            resize();
-        }
         rear = (rear + 1) % queue.length;
         queue[rear] = value;
         size++;
