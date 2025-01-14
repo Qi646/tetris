@@ -1,5 +1,6 @@
 package com.ics.tetwis;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,6 +15,7 @@ public class HelloApplication extends Application {
     private static final int TILE_SIZE = 30;
 
     private int[][] grid = new int[BOARD_HEIGHT][BOARD_WIDTH];
+    private Tetromino currentTetromino;
 
     @Override
     public void start(Stage stage) {
@@ -28,14 +30,35 @@ public class HelloApplication extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawGrid(gc);
-        // Initialize game components and start game loop here
 
-        // Example usage of colorCell method
-        colorCell(gc, 2, 3, Color.RED);
+        // Initialize game components
+        currentTetromino = new Tetromino(0);
 
-        // Example usage of renderTetromino method
-        Tetromino tetromino = new Tetromino(0);
-        renderTetromino(gc, tetromino, Color.BLUE);
+        // Start game loop
+        AnimationTimer gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+                render(gc);
+            }
+        };
+        gameLoop.start();
+    }
+
+    private void update() {
+        // Update game state (e.g., move tetromino down)
+        currentTetromino.moveDown();
+    }
+
+    private void render(GraphicsContext gc) {
+        // Clear the canvas
+        gc.clearRect(0, 0, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+
+        // Draw the grid
+        drawGrid(gc);
+
+        // Render the current tetromino
+        renderTetromino(gc, currentTetromino, Color.BLUE);
     }
 
     private void drawGrid(GraphicsContext gc) {
