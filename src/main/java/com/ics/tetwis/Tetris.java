@@ -1,6 +1,5 @@
 package com.ics.tetwis;
 
-import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,7 +13,7 @@ public class Tetris extends Application {
     private int[][] grid = new int[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
     private Tetromino currentTetromino;
     private long lastUpdateTime = 0;
-    private final Random random = new Random();
+    private final TetrominoFactory tetrominoFactory = new TetrominoFactory();
 
     @Override
     public void start(Stage stage) {
@@ -31,7 +30,7 @@ public class Tetris extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawGrid(gc);
 
-        currentTetromino = new Tetromino(random.nextInt(7));
+        currentTetromino = tetrominoFactory.createTetromino();
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -72,7 +71,7 @@ public class Tetris extends Application {
             currentTetromino.moveDown();
         } else {
             placeTetromino(currentTetromino);
-            currentTetromino = new Tetromino(random.nextInt(7));
+            currentTetromino = tetrominoFactory.createTetromino();
         }
     }
 
