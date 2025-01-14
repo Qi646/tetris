@@ -32,6 +32,20 @@ public class Tetris extends Application {
 
         currentTetromino = new Tetromino(new Random().nextInt(7));
 
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case LEFT:
+                    currentTetromino.moveLeft();
+                    break;
+                case RIGHT:
+                    currentTetromino.moveRight();
+                    break;
+                default:
+                    break;
+            }
+            render(gc);
+        });
+
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
