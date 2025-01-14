@@ -57,6 +57,7 @@ public class Tetris extends Application {
     }
 
     private void drawGrid(GraphicsContext gc) {
+        gc.setStroke(Color.LIGHTGREY);
         for (int y = 0; y < Constants.BOARD_HEIGHT; y++) {
             for (int x = 0; x < Constants.BOARD_WIDTH; x++) {
                 gc.strokeRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
