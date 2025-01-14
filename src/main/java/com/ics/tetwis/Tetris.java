@@ -73,19 +73,19 @@ public class Tetris extends Application {
     private Color getColorForTetromino(int type) {
         switch (type) {
             case 0:
-                return Color.CYAN; // I
+                return Color.CYAN;
             case 1:
-                return Color.YELLOW; // O
+                return Color.YELLOW;
             case 2:
-                return Color.PURPLE; // T
+                return Color.PURPLE;
             case 3:
-                return Color.GREEN; // S
+                return Color.ORANGE;
             case 4:
-                return Color.RED; // Z
+                return Color.BLUE;
             case 5:
-                return Color.BLUE; // J
+                return Color.GREEN;
             case 6:
-                return Color.ORANGE; // L
+                return Color.RED;
             default:
                 return Color.BLACK; // Default color, should never activate
         }

@@ -13,8 +13,8 @@ public class Tetromino {
             {0, 0, 0, 0}
         },
         {
-            {1, 1, 0, 0}, 
-            {1, 1, 0, 0}, 
+            {0, 1, 1, 0}, 
+            {0, 1, 1, 0}, 
             {0, 0, 0, 0}, 
             {0, 0, 0, 0}
         },
@@ -53,7 +53,7 @@ public class Tetromino {
     public Tetromino(int type) {
         this.type = type;
         this.shape = SHAPES[type];
-        this.x = 5;
+        this.x = 3;
         this.y = 0;
     }
 
