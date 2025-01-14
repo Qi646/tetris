@@ -60,14 +60,70 @@ public class Tetris extends Application {
     }
 
     private void update() {
-        currentTetromino.moveDown();
+        if (canMoveDown(currentTetromino)) {
+            currentTetromino.moveDown();
+        } else {
+            placeTetromino(currentTetromino);
+            currentTetromino = new Tetromino(new Random().nextInt(7));
+        }
+    }
+
+    private boolean canMoveDown(Tetromino tetromino) {
+        int[][] shape = tetromino.getShape();
+        int x = tetromino.getX();
+        int y = tetromino.getY();
+
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != 0) {
+                    int newY = y + row + 1;
+                    if (newY >= Constants.BOARD_HEIGHT || grid[newY][x + col] != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private void placeTetromino(Tetromino tetromino) {
+        int[][] shape = tetromino.getShape();
+        int x = tetromino.getX();
+        int y = tetromino.getY();
+        int type = tetromino.getType() + 1;
+
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != 0) {
+                    grid[y + row][x + col] = type;
+                }
+            }
+        }
     }
 
     private void render(GraphicsContext gc) {
         gc.clearRect(0, 0, Constants.BOARD_WIDTH * Constants.TILE_SIZE, Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
 
         drawGrid(gc);
-        renderTetromino(gc, currentTetromino, Color.BLUE);
+        renderTetromino(gc, currentTetromino);
+        renderGrid(gc);
+    }
+
+    private void renderTetromino(GraphicsContext gc, Tetromino tetromino) {
+        int[][] shape = tetromino.getShape();
+        int tetrominoX = tetromino.getX();
+        int tetrominoY = tetromino.getY();
+        Color tetrominoColor = getColorForTetromino(tetromino.getType());
+
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != 0) {
+                    int gridX = tetrominoX + col;
+                    int gridY = tetrominoY + row;
+                    colorCell(gc, gridX, gridY, tetrominoColor);
+                }
+            }
+        }
     }
 
     private void drawGrid(GraphicsContext gc) {
@@ -76,6 +132,16 @@ public class Tetris extends Application {
             for (int x = 0; x < Constants.BOARD_WIDTH; x++) {
                 gc.strokeRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
                         Constants.TILE_SIZE);
+            }
+        }
+    }
+
+    private void renderGrid(GraphicsContext gc) {
+        for (int y = 0; y < Constants.BOARD_HEIGHT; y++) {
+            for (int x = 0; x < Constants.BOARD_WIDTH; x++) {
+                if (grid[y][x] != 0) {
+                    colorCell(gc, x, y, getColorForTetromino(grid[y][x] - 1));
+                }
             }
         }
     }
