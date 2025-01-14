@@ -1,13 +1,14 @@
 package com.ics.tetwis;
 
+import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class Tetris extends Application {
     private int[][] grid = new int[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
@@ -29,7 +30,7 @@ public class Tetris extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawGrid(gc);
 
-        currentTetromino = new Tetromino(0);
+        currentTetromino = new Tetromino(new Random().nextInt(7));
 
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
