@@ -70,17 +70,39 @@ public class Tetris extends Application {
         gc.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
     }
 
+    private Color getColorForTetromino(int type) {
+        switch (type) {
+            case 0:
+                return Color.CYAN; // I
+            case 1:
+                return Color.YELLOW; // O
+            case 2:
+                return Color.PURPLE; // T
+            case 3:
+                return Color.GREEN; // S
+            case 4:
+                return Color.RED; // Z
+            case 5:
+                return Color.BLUE; // J
+            case 6:
+                return Color.ORANGE; // L
+            default:
+                return Color.BLACK; // Default color, should never activate
+        }
+    }
+
     public void renderTetromino(GraphicsContext gc, Tetromino tetromino, Color color) {
         int[][] shape = tetromino.getShape();
         int tetrominoX = tetromino.getX();
         int tetrominoY = tetromino.getY();
+        Color tetrominoColor = getColorForTetromino(tetromino.getType());
 
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] == 1) {
                     int gridX = tetrominoX + col;
                     int gridY = tetrominoY + row;
-                    colorCell(gc, gridX, gridY, color);
+                    colorCell(gc, gridX, gridY, tetrominoColor);
                 }
             }
         }

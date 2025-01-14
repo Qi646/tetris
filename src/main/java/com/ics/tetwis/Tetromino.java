@@ -98,5 +98,9 @@ public class Tetromino {
         this.x = x;
         this.y = y;
     }
+
+    public int getType() {
+        return type;
+    }
 }
 
