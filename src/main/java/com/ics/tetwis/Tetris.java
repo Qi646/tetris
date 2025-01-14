@@ -87,7 +87,7 @@ public class Tetris extends Application {
             case 6:
                 return Color.RED;
             default:
-                return Color.BLACK; // Default color, should never activate
+                throw new IllegalArgumentException("Invalid type: " + type);
         }
     }
 
