@@ -1,4 +1,4 @@
-package com.ics.tetwis;
+package com.ics.tetris;
 
 import java.util.Arrays;
 

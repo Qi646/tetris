@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ics</groupId>
-    <artifactId>tetwis</artifactId>
+    <artifactId>tetris</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>tetwis</name>
+    <name>tetris</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.ics.tetwis/com.ics.tetwis.Tetris</mainClass>
+                            <mainClass>com.ics.tetris/com.ics.tetris.Tetris</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

@@ -1,4 +1,4 @@
-package com.ics.tetwis;
+package com.ics.tetris;
 
 public class Constants {
   public static final int BOARD_WIDTH = 10;
