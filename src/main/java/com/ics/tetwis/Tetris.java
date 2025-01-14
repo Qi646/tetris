@@ -146,17 +146,20 @@ public class Tetris extends Application {
     }
 
     private void renderTetromino(GraphicsContext gc, Tetromino tetromino) {
+        renderTetromino(gc, tetromino, getColorForTetromino(tetromino.getType()));
+    }
+
+    private void renderTetromino(GraphicsContext gc, Tetromino tetromino, Color color) {
         int[][] shape = tetromino.getShape();
         int tetrominoX = tetromino.getX();
         int tetrominoY = tetromino.getY();
-        Color tetrominoColor = getColorForTetromino(tetromino.getType());
 
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] != 0) {
                     int gridX = tetrominoX + col;
                     int gridY = tetrominoY + row;
-                    colorCell(gc, gridX, gridY, tetrominoColor);
+                    colorCell(gc, gridX, gridY, color);
                 }
             }
         }
@@ -205,23 +208,6 @@ public class Tetris extends Application {
                 return Color.RED;
             default:
                 throw new IllegalArgumentException("Invalid type: " + type);
-        }
-    }
-
-    public void renderTetromino(GraphicsContext gc, Tetromino tetromino, Color color) {
-        int[][] shape = tetromino.getShape();
-        int tetrominoX = tetromino.getX();
-        int tetrominoY = tetromino.getY();
-        Color tetrominoColor = getColorForTetromino(tetromino.getType());
-
-        for (int row = 0; row < shape.length; row++) {
-            for (int col = 0; col < shape[row].length; col++) {
-                if (shape[row][col] == 1) {
-                    int gridX = tetrominoX + col;
-                    int gridY = tetrominoY + row;
-                    colorCell(gc, gridX, gridY, tetrominoColor);
-                }
-            }
         }
     }
 
