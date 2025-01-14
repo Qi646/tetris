@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
-public class HelloApplication extends Application {
+public class Tetris extends Application {
     private static final int BOARD_WIDTH = 10;
     private static final int BOARD_HEIGHT = 20;
     private static final int TILE_SIZE = 30;
