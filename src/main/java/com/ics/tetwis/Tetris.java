@@ -40,6 +40,13 @@ public class Tetris extends Application {
                 case RIGHT:
                     currentTetromino.moveRight();
                     break;
+                case DOWN:
+                    if (canMoveDown(currentTetromino)) {
+                        currentTetromino.moveDown();
+                    } else {
+                        update();
+                    }
+                    break;
                 default:
                     break;
             }
