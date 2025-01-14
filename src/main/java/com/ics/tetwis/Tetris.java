@@ -10,19 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
 public class Tetris extends Application {
-    private static final int BOARD_WIDTH = 10;
-    private static final int BOARD_HEIGHT = 20;
-    private static final int TILE_SIZE = 30;
-    private static final long UPDATE_INTERVAL = 500_000_000;
-
-    private int[][] grid = new int[BOARD_HEIGHT][BOARD_WIDTH];
+    private int[][] grid = new int[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
     private Tetromino currentTetromino;
     private long lastUpdateTime = 0;
 
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
-        Canvas canvas = new Canvas(BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+        Canvas canvas = new Canvas(Constants.BOARD_WIDTH * Constants.TILE_SIZE,
+                Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
         root.getChildren().add(canvas);
         Scene scene = new Scene(root);
 
@@ -38,7 +34,7 @@ public class Tetris extends Application {
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (now - lastUpdateTime >= UPDATE_INTERVAL) {
+                if (now - lastUpdateTime >= Constants.UPDATE_INTERVAL) {
                     update();
                     lastUpdateTime = now;
                 }
@@ -53,24 +49,24 @@ public class Tetris extends Application {
     }
 
     private void render(GraphicsContext gc) {
-        gc.clearRect(0, 0, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+        gc.clearRect(0, 0, Constants.BOARD_WIDTH * Constants.TILE_SIZE, Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
 
         drawGrid(gc);
-
         renderTetromino(gc, currentTetromino, Color.BLUE);
     }
 
     private void drawGrid(GraphicsContext gc) {
-        for (int y = 0; y < BOARD_HEIGHT; y++) {
-            for (int x = 0; x < BOARD_WIDTH; x++) {
-                gc.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        for (int y = 0; y < Constants.BOARD_HEIGHT; y++) {
+            for (int x = 0; x < Constants.BOARD_WIDTH; x++) {
+                gc.strokeRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
+                        Constants.TILE_SIZE);
             }
         }
     }
 
     private void colorCell(GraphicsContext gc, int x, int y, Color color) {
         gc.setFill(color);
-        gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        gc.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
     }
 
     public void renderTetromino(GraphicsContext gc, Tetromino tetromino, Color color) {
