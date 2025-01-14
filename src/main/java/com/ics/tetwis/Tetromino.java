@@ -71,11 +71,24 @@ public class Tetromino {
     }
 
     public void moveLeft() {
-        x--;
+        if (x > 0) {
+            x--;
+        }
     }
 
     public void moveRight() {
-        x++;
+        int width = 0;
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = shape[i].length - 1; j >= 0; j--) {
+                if (shape[i][j] != 0) {
+                    width = Math.max(width, j + 1);
+                    break;
+                }
+            }
+        }
+        if (x + width < Constants.BOARD_WIDTH) {
+            x++;
+        }
     }
 
     public void moveDown() {
