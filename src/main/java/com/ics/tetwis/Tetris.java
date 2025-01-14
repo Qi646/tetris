@@ -1,5 +1,7 @@
 package com.ics.tetwis;
 
+import java.util.Arrays;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -111,7 +113,7 @@ public class Tetris extends Application {
     }
 
     private void clearFullLines() {
-        for (int row = 0; row < Constants.BOARD_HEIGHT; row++) {
+        for (int row = Constants.BOARD_HEIGHT - 1; row >= 0; row--) {
             boolean isFullLine = true;
             for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
                 if (grid[row][col] == 0) {
@@ -121,19 +123,16 @@ public class Tetris extends Application {
             }
             if (isFullLine) {
                 clearLine(row);
+                row++;
             }
         }
     }
 
     private void clearLine(int line) {
         for (int row = line; row > 0; row--) {
-            for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
-                grid[row][col] = grid[row - 1][col];
-            }
+            System.arraycopy(grid[row - 1], 0, grid[row], 0, Constants.BOARD_WIDTH);
         }
-        for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
-            grid[0][col] = 0;
-        }
+        Arrays.fill(grid[0], 0);
     }
 
     private void render(GraphicsContext gc) {
