@@ -92,7 +92,18 @@ public class Tetromino {
     }
 
     public void moveDown() {
-        y++;
+        int height = 0;
+        for (int i = shape.length - 1; i >= 0; i--) {
+            for (int j = 0; j < shape[i].length; j++) {
+                if (shape[i][j] != 0) {
+                    height = Math.max(height, i + 1);
+                    break;
+                }
+            }
+        }
+        if (y + height < Constants.BOARD_HEIGHT) {
+            y++;
+        }
     }
 
     public int[][] getShape() {
