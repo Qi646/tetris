@@ -99,6 +99,34 @@ public class Tetris extends Application {
                 }
             }
         }
+
+        clearFullLines();
+    }
+
+    private void clearFullLines() {
+        for (int row = 0; row < Constants.BOARD_HEIGHT; row++) {
+            boolean isFullLine = true;
+            for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
+                if (grid[row][col] == 0) {
+                    isFullLine = false;
+                    break;
+                }
+            }
+            if (isFullLine) {
+                clearLine(row);
+            }
+        }
+    }
+
+    private void clearLine(int line) {
+        for (int row = line; row > 0; row--) {
+            for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
+                grid[row][col] = grid[row - 1][col];
+            }
+        }
+        for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
+            grid[0][col] = 0;
+        }
     }
 
     private void render(GraphicsContext gc) {
