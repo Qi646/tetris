@@ -13,9 +13,11 @@ public class Tetris extends Application {
     private static final int BOARD_WIDTH = 10;
     private static final int BOARD_HEIGHT = 20;
     private static final int TILE_SIZE = 30;
+    private static final long UPDATE_INTERVAL = 500_000_000;
 
     private int[][] grid = new int[BOARD_HEIGHT][BOARD_WIDTH];
     private Tetromino currentTetromino;
+    private long lastUpdateTime = 0;
 
     @Override
     public void start(Stage stage) {
@@ -31,14 +33,15 @@ public class Tetris extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawGrid(gc);
 
-        // Initialize game components
         currentTetromino = new Tetromino(0);
 
-        // Start game loop
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
+                if (now - lastUpdateTime >= UPDATE_INTERVAL) {
+                    update();
+                    lastUpdateTime = now;
+                }
                 render(gc);
             }
         };
@@ -46,18 +49,14 @@ public class Tetris extends Application {
     }
 
     private void update() {
-        // Update game state (e.g., move tetromino down)
         currentTetromino.moveDown();
     }
 
     private void render(GraphicsContext gc) {
-        // Clear the canvas
         gc.clearRect(0, 0, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
 
-        // Draw the grid
         drawGrid(gc);
 
-        // Render the current tetromino
         renderTetromino(gc, currentTetromino, Color.BLUE);
     }
 
