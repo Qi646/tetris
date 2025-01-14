@@ -71,9 +71,19 @@ public class Tetromino {
     }
 
     public void moveLeft() {
-        if (x > 0) {
-            x--;
+        if (isOTetromino()) {
+            if (x > -1) {
+                x--;
+            }
+        } else {
+            if (x > 0) {
+                x--;
+            }
         }
+    }
+
+    private boolean isOTetromino() {
+        return this.type == 1;
     }
 
     public void moveRight() {
