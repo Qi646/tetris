@@ -37,10 +37,18 @@ public class Tetris extends Application {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case LEFT:
-                    currentTetromino.moveLeft();
+                    if (canMoveLeft(currentTetromino)) {
+                        currentTetromino.moveLeft();
+                    } else {
+                        update();
+                    }
                     break;
                 case RIGHT:
-                    currentTetromino.moveRight();
+                    if (canMoveRight(currentTetromino)) {
+                        currentTetromino.moveRight();
+                    } else {
+                        update();
+                    }
                     break;
                 case DOWN:
                     if (canMoveDown(currentTetromino)) {
@@ -83,6 +91,42 @@ public class Tetris extends Application {
             placeTetromino(currentTetromino);
             currentTetromino = tetrominoFactory.createTetromino();
         }
+    }
+
+    private boolean canMoveLeft(Tetromino tetromino) {
+        int[][] shape = tetromino.getShape();
+        int x = tetromino.getX();
+        int y = tetromino.getY();
+
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != 0) {
+                    int newX = x + col - 1;
+                    if (newX < 0 || grid[y + row][newX] != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean canMoveRight(Tetromino tetromino) {
+        int[][] shape = tetromino.getShape();
+        int x = tetromino.getX();
+        int y = tetromino.getY();
+
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != 0) {
+                    int newX = x + col + 1;
+                    if (newX >= Constants.BOARD_WIDTH || grid[y + row][newX] != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private boolean canMoveDown(Tetromino tetromino) {
