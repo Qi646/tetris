@@ -5,49 +5,56 @@ public class Tetromino {
     private int type;
     private int x, y;
 
-    private static final int[][][] SHAPES = {
-        {
-            {1, 1, 1, 1}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        },
-        {
-            {0, 1, 1, 0}, 
-            {0, 1, 1, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        },
-        {
-            {0, 1, 0, 0}, 
-            {1, 1, 1, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        },
-        {
-            {0, 0, 1, 0}, 
-            {1, 1, 1, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        },
-        {
-            {1, 0, 0, 0}, 
-            {1, 1, 1, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        },
-        {
-            {0, 1, 1, 0}, 
-            {1, 1, 0, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        },
-        {
-            {1, 1, 0, 0}, 
-            {0, 1, 1, 0}, 
-            {0, 0, 0, 0}, 
-            {0, 0, 0, 0}
-        }
+    // I-Tetromino (4 blocks in a straight line)
+    public static final int[][] I_SHAPE = {
+        {1, 1, 1, 1}
+    };
+
+    // O-Tetromino (2x2 square)
+    public static final int[][] O_SHAPE = {
+        {1, 1},
+        {1, 1}
+    };
+
+    // T-Tetromino (T-shaped)
+    public static final int[][] T_SHAPE = {
+        {0, 1, 0},
+        {1, 1, 1}
+    };
+
+    // S-Tetromino (S-shaped)
+    public static final int[][] S_SHAPE = {
+        {0, 1, 1},
+        {1, 1, 0}
+    };
+
+    // Z-Tetromino (Z-shaped)
+    public static final int[][] Z_SHAPE = {
+        {1, 1, 0},
+        {0, 1, 1}
+    };
+
+    // J-Tetromino (L-shaped, facing left)
+    public static final int[][] J_SHAPE = {
+        {1, 0, 0},
+        {1, 1, 1}
+    };
+
+    // L-Tetromino (L-shaped, facing right)
+    public static final int[][] L_SHAPE = {
+        {0, 0, 1},
+        {1, 1, 1}
+    };
+
+    // Combined SHAPES array containing all Tetromino shapes
+    public static final int[][][] SHAPES = {
+        I_SHAPE,   // I-Tetromino
+        O_SHAPE,   // O-Tetromino
+        T_SHAPE,   // T-Tetromino
+        S_SHAPE,   // S-Tetromino
+        Z_SHAPE,   // Z-Tetromino
+        J_SHAPE,   // J-Tetromino
+        L_SHAPE    // L-Tetromino
     };
 
     public Tetromino(int type) {
@@ -58,16 +65,18 @@ public class Tetromino {
     }
 
     public void rotate() {
-        int n = shape.length;
-        int[][] newShape = new int[n][n];
+        int rows = shape.length;
+        int cols = shape[0].length;
+        int[][] rotatedShape = new int[cols][rows];
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                newShape[j][n - 1 - i] = shape[i][j];
+        // Rotate the shape by 90 degrees clockwise
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                rotatedShape[col][rows - row - 1] = shape[row][col];
             }
         }
 
-        shape = newShape;
+        shape = rotatedShape;
     }
 
     public void moveLeft() {
