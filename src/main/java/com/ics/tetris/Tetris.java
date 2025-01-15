@@ -134,13 +134,6 @@ public class Tetris extends Application {
         }
     }
 
-    private void clearLine(int line) {
-        for (int row = line; row > 0; row--) {
-            System.arraycopy(grid[row - 1], 0, grid[row], 0, Constants.BOARD_WIDTH);
-        }
-        Arrays.fill(grid[0], 0);
-    }
-
     private void render(GraphicsContext gc) {
         gc.clearRect(0, 0, Constants.BOARD_WIDTH * Constants.TILE_SIZE, Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
 
