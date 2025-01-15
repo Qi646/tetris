@@ -113,6 +113,7 @@ public class Tetris extends Application {
     }
 
     private void clearFullLines() {
+        int writeRow = Constants.BOARD_HEIGHT - 1;
         for (int row = Constants.BOARD_HEIGHT - 1; row >= 0; row--) {
             boolean isFullLine = true;
             for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
@@ -121,10 +122,15 @@ public class Tetris extends Application {
                     break;
                 }
             }
-            if (isFullLine) {
-                clearLine(row);
-                row++;
+            if (!isFullLine) {
+                if (writeRow != row) {
+                    grid[writeRow] = grid[row];
+                }
+                writeRow--;
             }
+        }
+        while (writeRow >= 0) {
+            Arrays.fill(grid[writeRow--], 0);
         }
     }
 
