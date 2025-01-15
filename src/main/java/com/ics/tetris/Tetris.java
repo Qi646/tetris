@@ -49,6 +49,14 @@ public class Tetris extends Application {
                         update();
                     }
                     break;
+                case X:
+                    currentTetromino.rotate();
+                    break;
+                case Z:
+                    currentTetromino.rotate();
+                    currentTetromino.rotate();
+                    currentTetromino.rotate();
+                    break;
                 default:
                     break;
             }
