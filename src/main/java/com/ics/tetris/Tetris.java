@@ -15,6 +15,8 @@ public class Tetris extends Application {
     private int[][] grid = new int[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
     private Tetromino currentTetromino;
     private long lastUpdateTime = 0;
+    private long lockStartTime = 0;
+    private boolean isLocking = false;
     private final TetrominoFactory tetrominoFactory = new TetrominoFactory();
 
     @Override
@@ -40,32 +42,36 @@ public class Tetris extends Application {
                 case LEFT:
                     if (canMoveLeft(currentTetromino)) {
                         currentTetromino.moveLeft();
+                        resetLock();
                     }
                     break;
                 case RIGHT:
                     if (canMoveRight(currentTetromino)) {
                         currentTetromino.moveRight();
+                        resetLock();
                     }
                     break;
                 case DOWN:
                     if (canMoveDown(currentTetromino)) {
                         currentTetromino.moveDown();
+                        resetLock();
                     }
                     break;
                 case X:
                     currentTetromino.rotate();
+                    resetLock();
                     break;
                 case Z:
                     currentTetromino.rotate();
                     currentTetromino.rotate();
                     currentTetromino.rotate();
+                    resetLock();
                     break;
                 case SPACE:
                     while (canMoveDown(currentTetromino)) {
                         currentTetromino.moveDown();
                     }
-                    placeTetromino(currentTetromino);
-                    currentTetromino = tetrominoFactory.createTetromino();
+                    lockTetromino();
                     break;
                 default:
                     break;
@@ -77,7 +83,7 @@ public class Tetris extends Application {
             @Override
             public void handle(long now) {
                 if (now - lastUpdateTime >= Constants.UPDATE_INTERVAL) {
-                    update();
+                    update(now);
                     lastUpdateTime = now;
                 }
                 render(gc);
@@ -86,13 +92,29 @@ public class Tetris extends Application {
         gameLoop.start();
     }
 
-    private void update() {
+    private void update(long now) {
         if (canMoveDown(currentTetromino)) {
             currentTetromino.moveDown();
+            resetLock();
         } else {
-            placeTetromino(currentTetromino);
-            currentTetromino = tetrominoFactory.createTetromino();
+            if (!isLocking) {
+                isLocking = true;
+                lockStartTime = now;
+            } else if (now - lockStartTime >= Constants.LOCK_DELAY) {
+                lockTetromino();
+            }
         }
+    }
+
+    private void resetLock() {
+        isLocking = false;
+        lockStartTime = 0;
+    }
+
+    private void lockTetromino() {
+        placeTetromino(currentTetromino);
+        currentTetromino = tetrominoFactory.createTetromino();
+        resetLock();
     }
 
     private Tetromino getGhostPiece(Tetromino tetromino) {
