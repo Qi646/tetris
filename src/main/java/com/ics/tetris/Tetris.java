@@ -94,6 +94,18 @@ public class Tetris extends Application {
         }
     }
 
+    private Tetromino getGhostPiece(Tetromino tetromino) {
+        Tetromino ghost = new Tetromino(tetromino.getType());
+        ghost.setPosition(tetromino.getX(), tetromino.getY());
+        for (int i = 0; i < tetromino.getRotationState(); i++) {
+            ghost.rotate();
+        }
+        while (canMoveDown(ghost)) {
+            ghost.moveDown();
+        }
+        return ghost;
+    }
+
     private boolean canMoveLeft(Tetromino tetromino) {
         int[][] shape = tetromino.getShape();
         int x = tetromino.getX();
@@ -191,6 +203,8 @@ public class Tetris extends Application {
         gc.clearRect(0, 0, Constants.BOARD_WIDTH * Constants.TILE_SIZE, Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
 
         drawGrid(gc);
+        Tetromino ghostPiece = getGhostPiece(currentTetromino);
+        renderTetromino(gc, ghostPiece, Color.GRAY);
         renderTetromino(gc, currentTetromino);
         renderGrid(gc);
     }

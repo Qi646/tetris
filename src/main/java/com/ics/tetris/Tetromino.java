@@ -4,6 +4,7 @@ public class Tetromino {
     private int[][] shape;
     private int type;
     private int x, y;
+    private int rotationState = 0;
 
     // I-Tetromino (4 blocks in a straight line)
     public static final int[][] I_SHAPE = {
@@ -77,6 +78,7 @@ public class Tetromino {
         }
 
         shape = rotatedShape;
+        rotationState = (rotationState + 1) % 4;
     }
 
     public void moveLeft() {
@@ -144,6 +146,10 @@ public class Tetromino {
 
     public int getType() {
         return type;
+    }
+
+    public int getRotationState() {
+        return rotationState;
     }
 }
 
