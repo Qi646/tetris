@@ -264,13 +264,13 @@ public class Tetris extends Application {
             case 2:
                 return Color.PURPLE;
             case 3:
-                return Color.ORANGE;
-            case 4:
-                return Color.BLUE;
-            case 5:
                 return Color.GREEN;
-            case 6:
+            case 4:
                 return Color.RED;
+            case 5:
+                return Color.BLUE;
+            case 6:
+                return Color.ORANGE;
             default:
                 throw new IllegalArgumentException("Invalid type: " + type);
         }
