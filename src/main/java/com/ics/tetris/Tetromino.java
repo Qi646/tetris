@@ -6,7 +6,6 @@ public class Tetromino {
     private int x, y;
     private int rotationState = 0;
 
-    // I-Tetromino rotations
     public static final int[][][] I_SHAPE = {
             {
                     { 0, 0, 0, 0 },
@@ -34,7 +33,6 @@ public class Tetromino {
             }
     };
 
-    // O-Tetromino rotations (same for all rotations)
     public static final int[][][] O_SHAPE = {
             {
                     { 1, 1 },
@@ -54,7 +52,6 @@ public class Tetromino {
             }
     };
 
-    // T-Tetromino rotations
     public static final int[][][] T_SHAPE = {
             {
                     { 0, 1, 0 },
@@ -78,7 +75,6 @@ public class Tetromino {
             }
     };
 
-    // S-Tetromino rotations
     public static final int[][][] S_SHAPE = {
             {
                     { 0, 1, 1 },
@@ -102,7 +98,6 @@ public class Tetromino {
             }
     };
 
-    // Z-Tetromino rotations
     public static final int[][][] Z_SHAPE = {
             {
                     { 1, 1, 0 },
@@ -126,7 +121,6 @@ public class Tetromino {
             }
     };
 
-    // J-Tetromino rotations
     public static final int[][][] J_SHAPE = {
             {
                     { 1, 0, 0 },
@@ -150,7 +144,6 @@ public class Tetromino {
             }
     };
 
-    // L-Tetromino rotations
     public static final int[][][] L_SHAPE = {
             {
                     { 0, 0, 1 },
@@ -174,15 +167,14 @@ public class Tetromino {
             }
     };
 
-    // Combined SHAPES array containing all Tetromino shapes
     public static final int[][][][] SHAPES = {
-            I_SHAPE, // I-Tetromino
-            O_SHAPE, // O-Tetromino
-            T_SHAPE, // T-Tetromino
-            S_SHAPE, // S-Tetromino
-            Z_SHAPE, // Z-Tetromino
-            J_SHAPE, // J-Tetromino
-            L_SHAPE // L-Tetromino
+            I_SHAPE,
+            O_SHAPE,
+            T_SHAPE,
+            S_SHAPE,
+            Z_SHAPE,
+            J_SHAPE,
+            L_SHAPE
     };
 
     public Tetromino(int type) {
@@ -197,7 +189,7 @@ public class Tetromino {
     }
 
     public void rotateCounterclockwise() {
-        rotationState = (rotationState + 3) % 4; // Equivalent to -1 % 4
+        rotationState = (rotationState + 3) % 4;
     }
 
     public void moveLeft() {
