@@ -27,6 +27,7 @@ public class Tetris extends Application {
 
         stage.setTitle("Tetris");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
