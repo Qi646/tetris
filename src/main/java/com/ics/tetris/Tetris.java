@@ -59,6 +59,13 @@ public class Tetris extends Application {
                     currentTetromino.rotate();
                     currentTetromino.rotate();
                     break;
+                case SPACE:
+                    while (canMoveDown(currentTetromino)) {
+                        currentTetromino.moveDown();
+                    }
+                    placeTetromino(currentTetromino);
+                    currentTetromino = tetrominoFactory.createTetromino();
+                    break;
                 default:
                     break;
             }
