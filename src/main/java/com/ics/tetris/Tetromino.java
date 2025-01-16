@@ -192,8 +192,12 @@ public class Tetromino {
         this.y = 0;
     }
 
-    public void rotate() {
+    public void rotateClockwise() {
         rotationState = (rotationState + 1) % 4;
+    }
+
+    public void rotateCounterclockwise() {
+        rotationState = (rotationState + 3) % 4; // Equivalent to -1 % 4
     }
 
     public void moveLeft() {

@@ -58,13 +58,11 @@ public class Tetris extends Application {
                     }
                     break;
                 case X:
-                    currentTetromino.rotate();
+                    currentTetromino.rotateClockwise();
                     resetLock();
                     break;
                 case Z:
-                    currentTetromino.rotate();
-                    currentTetromino.rotate();
-                    currentTetromino.rotate();
+                    currentTetromino.rotateCounterclockwise();
                     resetLock();
                     break;
                 case SPACE:
@@ -121,7 +119,7 @@ public class Tetris extends Application {
         Tetromino ghost = new Tetromino(tetromino.getType());
         ghost.setPosition(tetromino.getX(), tetromino.getY());
         for (int i = 0; i < tetromino.getRotationState(); i++) {
-            ghost.rotate();
+            ghost.rotateClockwise();
         }
         while (canMoveDown(ghost)) {
             ghost.moveDown();
