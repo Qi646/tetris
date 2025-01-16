@@ -39,22 +39,16 @@ public class Tetris extends Application {
                 case LEFT:
                     if (canMoveLeft(currentTetromino)) {
                         currentTetromino.moveLeft();
-                    } else {
-                        update();
                     }
                     break;
                 case RIGHT:
                     if (canMoveRight(currentTetromino)) {
                         currentTetromino.moveRight();
-                    } else {
-                        update();
                     }
                     break;
                 case DOWN:
                     if (canMoveDown(currentTetromino)) {
                         currentTetromino.moveDown();
-                    } else {
-                        update();
                     }
                     break;
                 case X:
