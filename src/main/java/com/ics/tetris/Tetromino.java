@@ -1,71 +1,80 @@
 package com.ics.tetris;
 
 public class Tetromino {
-    private int[][] shape;
+    private int[][][] rotations;
     private int type;
     private int x, y;
     private int rotationState = 0;
 
     // I-Tetromino (4 blocks in a straight line)
     public static final int[][] I_SHAPE = {
-        {1, 1, 1, 1}
+            { 1, 1, 1, 1 }
     };
 
     // O-Tetromino (2x2 square)
     public static final int[][] O_SHAPE = {
-        {1, 1},
-        {1, 1}
+            { 1, 1 },
+            { 1, 1 }
     };
 
     // T-Tetromino (T-shaped)
     public static final int[][] T_SHAPE = {
-        {0, 1, 0},
-        {1, 1, 1}
+            { 0, 1, 0 },
+            { 1, 1, 1 }
     };
 
     // S-Tetromino (S-shaped)
     public static final int[][] S_SHAPE = {
-        {0, 1, 1},
-        {1, 1, 0}
+            { 0, 1, 1 },
+            { 1, 1, 0 }
     };
 
     // Z-Tetromino (Z-shaped)
     public static final int[][] Z_SHAPE = {
-        {1, 1, 0},
-        {0, 1, 1}
+            { 1, 1, 0 },
+            { 0, 1, 1 }
     };
 
     // J-Tetromino (L-shaped, facing left)
     public static final int[][] J_SHAPE = {
-        {1, 0, 0},
-        {1, 1, 1}
+            { 1, 0, 0 },
+            { 1, 1, 1 }
     };
 
     // L-Tetromino (L-shaped, facing right)
     public static final int[][] L_SHAPE = {
-        {0, 0, 1},
-        {1, 1, 1}
+            { 0, 0, 1 },
+            { 1, 1, 1 }
     };
 
     // Combined SHAPES array containing all Tetromino shapes
     public static final int[][][] SHAPES = {
-        I_SHAPE,   // I-Tetromino
-        O_SHAPE,   // O-Tetromino
-        T_SHAPE,   // T-Tetromino
-        S_SHAPE,   // S-Tetromino
-        Z_SHAPE,   // Z-Tetromino
-        J_SHAPE,   // J-Tetromino
-        L_SHAPE    // L-Tetromino
+            I_SHAPE, // I-Tetromino
+            O_SHAPE, // O-Tetromino
+            T_SHAPE, // T-Tetromino
+            S_SHAPE, // S-Tetromino
+            Z_SHAPE, // Z-Tetromino
+            J_SHAPE, // J-Tetromino
+            L_SHAPE // L-Tetromino
     };
 
     public Tetromino(int type) {
         this.type = type;
-        this.shape = SHAPES[type];
+        this.rotations = precomputeRotations(SHAPES[type]);
         this.x = 3;
         this.y = 0;
     }
 
-    public void rotate() {
+    private int[][][] precomputeRotations(int[][] shape) {
+        int[][][] rotations = new int[4][][];
+        rotations[0] = shape;
+        for (int i = 1; i < 4; i++) {
+            rotations[i] = rotateShape(rotations[i - 1]);
+        }
+        return rotations;
+    }
+
+    private int[][] rotateShape(int[][] shape) {
         int rows = shape.length;
         int cols = shape[0].length;
         int[][] rotatedShape = new int[cols][rows];
@@ -77,7 +86,10 @@ public class Tetromino {
             }
         }
 
-        shape = rotatedShape;
+        return rotatedShape;
+    }
+
+    public void rotate() {
         rotationState = (rotationState + 1) % 4;
     }
 
@@ -99,9 +111,9 @@ public class Tetromino {
 
     public void moveRight() {
         int width = 0;
-        for (int i = 0; i < shape.length; i++) {
-            for (int j = shape[i].length - 1; j >= 0; j--) {
-                if (shape[i][j] != 0) {
+        for (int i = 0; i < getShape().length; i++) {
+            for (int j = getShape()[i].length - 1; j >= 0; j--) {
+                if (getShape()[i][j] != 0) {
                     width = Math.max(width, j + 1);
                     break;
                 }
@@ -114,9 +126,9 @@ public class Tetromino {
 
     public void moveDown() {
         int height = 0;
-        for (int i = shape.length - 1; i >= 0; i--) {
-            for (int j = 0; j < shape[i].length; j++) {
-                if (shape[i][j] != 0) {
+        for (int i = getShape().length - 1; i >= 0; i--) {
+            for (int j = 0; j < getShape()[i].length; j++) {
+                if (getShape()[i][j] != 0) {
                     height = Math.max(height, i + 1);
                     break;
                 }
@@ -128,7 +140,7 @@ public class Tetromino {
     }
 
     public int[][] getShape() {
-        return shape;
+        return rotations[rotationState];
     }
 
     public int getX() {
@@ -152,4 +164,3 @@ public class Tetromino {
         return rotationState;
     }
 }
-
