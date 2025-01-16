@@ -9,99 +9,99 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Tetris extends Application {
-    private final Grid grid = new Grid();
-    private Tetromino currentTetromino;
-    private long lastUpdateTime = 0;
-    private long lockStartTime = 0;
-    private boolean isLocking = false;
-    private final TetrominoFactory tetrominoFactory = new TetrominoFactory();
-    private Renderer renderer;
+  private final Grid grid = new Grid();
+  private Tetromino currentTetromino;
+  private long lastUpdateTime = 0;
+  private long lockStartTime = 0;
+  private boolean isLocking = false;
+  private final TetrominoFactory tetrominoFactory = new TetrominoFactory();
+  private Renderer renderer;
 
-    @Override
-    public void start(Stage stage) {
-        Pane root = new Pane();
-        Canvas canvas = new Canvas(Constants.BOARD_WIDTH * Constants.TILE_SIZE,
-                Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
-        root.getChildren().add(canvas);
-        Scene scene = new Scene(root);
+  @Override
+  public void start(Stage stage) {
+    Pane root = new Pane();
+    Canvas canvas = new Canvas(Constants.BOARD_WIDTH * Constants.TILE_SIZE,
+        Constants.BOARD_HEIGHT * Constants.TILE_SIZE);
+    root.getChildren().add(canvas);
+    Scene scene = new Scene(root);
 
-        stage.setTitle("Tetris");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+    stage.setTitle("Tetris");
+    stage.setScene(scene);
+    stage.setResizable(false);
+    stage.show();
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        renderer = new Renderer(gc, grid);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    renderer = new Renderer(gc, grid);
 
-        currentTetromino = tetrominoFactory.createTetromino();
+    currentTetromino = tetrominoFactory.createTetromino();
 
-        InputHandler inputHandler = new InputHandler(this);
-        inputHandler.setupInput(scene);
+    InputHandler inputHandler = new InputHandler(this);
+    inputHandler.setupInput(scene);
 
-        AnimationTimer gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (now - lastUpdateTime >= Constants.UPDATE_INTERVAL) {
-                    update(now);
-                    lastUpdateTime = now;
-                }
-                render();
-            }
-        };
-        gameLoop.start();
-    }
-
-    private void update(long now) {
-        if (grid.canMoveDown(currentTetromino)) {
-            currentTetromino.moveDown();
-            resetLock();
-        } else {
-            if (!isLocking) {
-                isLocking = true;
-                lockStartTime = now;
-            } else if (now - lockStartTime >= Constants.LOCK_DELAY) {
-                lockTetromino();
-            }
+    AnimationTimer gameLoop = new AnimationTimer() {
+      @Override
+      public void handle(long now) {
+        if (now - lastUpdateTime >= Constants.UPDATE_INTERVAL) {
+          update(now);
+          lastUpdateTime = now;
         }
-    }
+        render();
+      }
+    };
+    gameLoop.start();
+  }
 
-    public void resetLock() {
-        isLocking = false;
-        lockStartTime = 0;
+  private void update(long now) {
+    if (grid.canMoveDown(currentTetromino)) {
+      currentTetromino.moveDown();
+      resetLock();
+    } else {
+      if (!isLocking) {
+        isLocking = true;
+        lockStartTime = now;
+      } else if (now - lockStartTime >= Constants.LOCK_DELAY) {
+        lockTetromino();
+      }
     }
+  }
 
-    public void lockTetromino() {
-        grid.placeTetromino(currentTetromino);
-        currentTetromino = tetrominoFactory.createTetromino();
-        resetLock();
-    }
+  public void resetLock() {
+    isLocking = false;
+    lockStartTime = 0;
+  }
 
-    private Tetromino getGhostPiece(Tetromino tetromino) {
-        Tetromino ghost = new Tetromino(tetromino.getType());
-        ghost.setPosition(tetromino.getX(), tetromino.getY());
-        for (int i = 0; i < tetromino.getRotationState(); i++) {
-            ghost.rotateClockwise();
-        }
-        while (grid.canMoveDown(ghost)) {
-            ghost.moveDown();
-        }
-        return ghost;
-    }
+  public void lockTetromino() {
+    grid.placeTetromino(currentTetromino);
+    currentTetromino = tetrominoFactory.createTetromino();
+    resetLock();
+  }
 
-    public void render() {
-        Tetromino ghostPiece = getGhostPiece(currentTetromino);
-        renderer.render(currentTetromino, ghostPiece);
+  private Tetromino getGhostPiece(Tetromino tetromino) {
+    Tetromino ghost = new Tetromino(tetromino.getType());
+    ghost.setPosition(tetromino.getX(), tetromino.getY());
+    for (int i = 0; i < tetromino.getRotationState(); i++) {
+      ghost.rotateClockwise();
     }
+    while (grid.canMoveDown(ghost)) {
+      ghost.moveDown();
+    }
+    return ghost;
+  }
 
-    public Grid getGrid() {
-        return grid;
-    }
+  public void render() {
+    Tetromino ghostPiece = getGhostPiece(currentTetromino);
+    renderer.render(currentTetromino, ghostPiece);
+  }
 
-    public Tetromino getCurrentTetromino() {
-        return currentTetromino;
-    }
+  public Grid getGrid() {
+    return grid;
+  }
 
-    public static void main(String[] args) {
-        launch();
-    }
+  public Tetromino getCurrentTetromino() {
+    return currentTetromino;
+  }
+
+  public static void main(String[] args) {
+    launch();
+  }
 }
