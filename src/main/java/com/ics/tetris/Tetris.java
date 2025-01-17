@@ -79,9 +79,7 @@ public class Tetris extends Application {
   private Tetromino getGhostPiece(Tetromino tetromino) {
     Tetromino ghost = new Tetromino(tetromino.getType());
     ghost.setPosition(tetromino.getX(), tetromino.getY());
-    for (int i = 0; i < tetromino.getRotationState(); i++) {
-      ghost.rotateClockwise();
-    }
+    ghost.setRotationState(tetromino.getRotationState());
     while (grid.canMoveDown(ghost)) {
       ghost.moveDown();
     }

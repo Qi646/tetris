@@ -295,4 +295,8 @@ public class Tetromino {
   public int getRotationState() {
     return rotationState;
   }
+
+public void setRotationState(int rotationState) {
+    this.rotationState = rotationState;
+}
 }
