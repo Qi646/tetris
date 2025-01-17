@@ -185,11 +185,47 @@ public class Tetromino {
   }
 
   public void rotateClockwise() {
-    rotationState = (rotationState + 1) % 4;
+      if (canRotateClockwise()) {
+          rotationState = (rotationState + 1) % 4;
+      }
   }
 
   public void rotateCounterclockwise() {
-    rotationState = (rotationState + 3) % 4;
+      if (canRotateCounterclockwise()) {
+          rotationState = (rotationState + 3) % 4;
+      }
+  }
+
+  public boolean canRotateClockwise() {
+      rotationState = (rotationState + 1) % 4;
+      for (int i = 0; i < getShape().length; i++) {
+          for (int j = 0; j < getShape()[i].length; j++) {
+              if (getShape()[i][j] != 0) {
+                  if (x + j < 0) {
+                      rotationState = (rotationState + 3) % 4;
+                      return false;
+                  }
+              }
+          }
+      }
+      rotationState = (rotationState + 3) % 4;
+      return true;
+  }
+
+  public boolean canRotateCounterclockwise() {
+      rotationState = (rotationState + 3) % 4;
+      for (int i = 0; i < getShape().length; i++) {
+          for (int j = 0; j < getShape()[i].length; j++) {
+              if (getShape()[i][j] != 0) {
+                  if (x + j < 0) {
+                      rotationState = (rotationState + 1) % 4;
+                      return false;
+                  }
+              }
+          }
+      }
+      rotationState = (rotationState + 1) % 4;
+      return true;
   }
 
   public void moveLeft() {
