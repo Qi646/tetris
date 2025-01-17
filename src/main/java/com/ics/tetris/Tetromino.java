@@ -193,10 +193,17 @@ public class Tetromino {
   }
 
   public void moveLeft() {
-    if (x > 0) {
+      for (int i = 0; i < getShape().length; i++) {
+          for (int j = 0; j < getShape()[i].length; j++) {
+              if (getShape()[i][j] != 0) {
+                  if (x + j < 0) {
+                      return;
+                  }
+              }
+          }
+      }
       x--;
-    }
-  }
+}
 
   public void moveRight() {
     int width = 0;

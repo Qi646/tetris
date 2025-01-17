@@ -71,9 +71,14 @@ public class Grid {
 
     for (int row = 0; row < shape.length; row++) {
       for (int col = 0; col < shape[row].length; col++) {
-        if (shape[row][col] != 0) {
-          grid[y + row][x + col] = type;
-        }
+          if (shape[row][col] != 0) {
+              int gridX = x + col;
+              int gridY = y + row;
+
+              if (gridY >= 0 && gridY < Constants.BOARD_HEIGHT && gridX >= 0 && gridX < Constants.BOARD_WIDTH) {
+                  grid[gridY][gridX] = type;
+              }
+          }
       }
     }
 
