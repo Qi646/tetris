@@ -103,9 +103,22 @@ public class Tetris extends Application {
     }
   }
 
+  private Color tileColor(int val) {
+    return switch (val) {
+      case 1 -> Color.CYAN; // I
+      case 2 -> Color.YELLOW; // O
+      case 3 -> Color.PURPLE; // T
+      case 4 -> Color.GREEN; // S
+      case 5 -> Color.RED; // Z
+      case 6 -> Color.BLUE; // J
+      case 7 -> Color.ORANGE; // L
+      default -> Color.GRAY;
+    };
+  }
+
   private void drawTile(int row, int col, int val) {
     Rectangle rect = new Rectangle(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-    rect.setFill(Color.hsb((val * 50) % 360, 0.8, 0.8));
+    rect.setFill(tileColor(val));
     root.getChildren().add(rect);
   }
 
