@@ -1,6 +1,7 @@
 package com.ics.tetris;
 
 import com.ics.tetris.Shape;
+import com.ics.tetris.HighScoreManager;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -61,7 +62,7 @@ public class Tetris extends Application {
     primaryStageRef.setTitle("Tetris");
     primaryStageRef.show();
 
-    loadHighScores();
+    HighScoreManager.loadHighScores();
 
     newShape();
     drawBoard();
@@ -121,7 +122,7 @@ public class Tetris extends Application {
     Scene loseScene = new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
     primaryStageRef.setScene(loseScene);
 
-    saveHighScores();
+    HighScoreManager.saveHighScores();
   }
 
   private void restartGame() {
@@ -135,23 +136,6 @@ public class Tetris extends Application {
     drawBoard();
     primaryStageRef.setScene(gameScene);
     linesCleared = 0;
-  }
-
-  private void loadHighScores() {
-    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(HIGH_SCORES_FILE))) {
-        Map<Integer, String> loadedScores = (Map<Integer, String>) ois.readObject();
-        highScores.putAll(loadedScores);
-    } catch (IOException | ClassNotFoundException e) {
-        e.printStackTrace();
-    }
-  }
-
-  private void saveHighScores() {
-    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(HIGH_SCORES_FILE))) {
-        oos.writeObject(highScores);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
   }
 
   private void fillBag() {
