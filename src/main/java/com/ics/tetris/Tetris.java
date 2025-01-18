@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.animation.KeyFrame;
@@ -117,6 +118,24 @@ public class Tetris extends Application {
           drawTile(currentRow + r, currentCol + c, val);
         }
       }
+    }
+
+    // Add grid lines for all rows
+    for (int r = 0; r < BOARD_HEIGHT; r++) {
+      // Draw horizontal lines
+      Line horizontalLine = new Line(0, r * TILE_SIZE, BOARD_WIDTH * TILE_SIZE, r * TILE_SIZE);
+      if (r == 2) {
+        horizontalLine.setStroke(Color.RED);
+      } else {
+        horizontalLine.setStroke(Color.LIGHTGRAY);
+      }
+      root.getChildren().add(horizontalLine);
+    }
+    for (int c = 0; c < BOARD_WIDTH; c++) {
+      // Draw vertical lines
+      Line verticalLine = new Line(c * TILE_SIZE, 0, c * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+      verticalLine.setStroke(Color.LIGHTGRAY);
+      root.getChildren().add(verticalLine);
     }
   }
 
