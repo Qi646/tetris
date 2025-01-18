@@ -185,17 +185,21 @@ public class Tetris extends Application {
         if (val != 0) {
           board[currentRow + r][currentCol + c] = val;
           if (currentRow + r < 2) {
-            timeline.stop();
-            Stage stage = (Stage) root.getScene().getWindow();
-            Label loseLabel = new Label("Thanks for playing!");
-            loseLabel.setStyle("-fx-font-size: 22; -fx-text-fill: blue;");
-            StackPane losePane = new StackPane(loseLabel);
-            stage.setScene(new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE));
+            loseGame();
             return;
           }
         }
       }
     }
+  }
+
+  private void loseGame() {
+    timeline.stop();
+    Stage stage = (Stage) root.getScene().getWindow();
+    Label loseLabel = new Label("Thanks for playing!");
+    loseLabel.setStyle("-fx-font-size: 22; -fx-text-fill: blue;");
+    StackPane losePane = new StackPane(loseLabel);
+    stage.setScene(new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE));
   }
 
   private void clearLines() {
