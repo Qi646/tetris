@@ -31,6 +31,7 @@ public class Tetris extends Application {
   private Timeline timeline = new Timeline();
   private List<Integer> shapeBag = new ArrayList<>();
   private int bagIndex = 0;
+  private int ghostRow;
 
   private static final int[][][] SHAPES = {
       // I
@@ -100,6 +101,20 @@ public class Tetris extends Application {
     }
   }
 
+  private void calculateGhostPiece() {
+    ghostRow = currentRow;
+    while (validMove(ghostRow + 1, currentCol, currentShape)) {
+      ghostRow++;
+    }
+  }
+
+  private void drawGhostTile(int row, int col, int val) {
+    Rectangle rect = new Rectangle(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    rect.setFill(tileColor(val));
+    rect.setOpacity(0.3);
+    root.getChildren().add(rect);
+  }
+
   private void drawBoard() {
     root.getChildren().clear();
     // Draw placed tiles
@@ -110,6 +125,18 @@ public class Tetris extends Application {
         }
       }
     }
+
+    // Calculate and draw ghost piece
+    calculateGhostPiece();
+    for (int r = 0; r < currentShape.height(); r++) {
+      for (int c = 0; c < currentShape.width(); c++) {
+        int val = currentShape.data[r][c];
+        if (val != 0) {
+          drawGhostTile(ghostRow + r, currentCol + c, val);
+        }
+      }
+    }
+
     // Draw current piece
     for (int r = 0; r < currentShape.height(); r++) {
       for (int c = 0; c < currentShape.width(); c++) {
