@@ -327,6 +327,17 @@ public class Tetris extends Application {
     }
   }
 
+  private void updateDropSpeed() {
+    double newInterval = Math.max(100, 500 - (linesCleared / 10) * 50);
+    timeline.stop();
+    timeline.getKeyFrames().clear();
+    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(newInterval), e -> {
+      drop();
+      drawBoard();
+    }));
+    timeline.play();
+  }
+
   private void clearLines() {
     for (int r = BOARD_HEIGHT - 1; r >= 0; r--) {
       boolean full = true;
@@ -339,10 +350,11 @@ public class Tetris extends Application {
       if (full) {
         linesCleared++;
         for (int rr = r; rr > 0; rr--) {
-          board[rr] = board[rr - 1].clone();
+          board[rr] = Arrays.copyOf(board[rr - 1], BOARD_WIDTH);
         }
         board[0] = new int[BOARD_WIDTH];
         r++;
+        updateDropSpeed();
       }
     }
   }
