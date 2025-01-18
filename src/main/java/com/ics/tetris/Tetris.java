@@ -67,6 +67,7 @@ public class Tetris extends Application {
         case RIGHT -> move(1);
         case UP -> rotate();
         case DOWN -> drop();
+        case SPACE -> hardDrop(); // Added hard drop
         default -> {
         }
       }
@@ -103,6 +104,15 @@ public class Tetris extends Application {
     if (!validMove(currentRow, currentCol, currentShape)) {
       timeline.stop();
     }
+  }
+
+  private void hardDrop() {
+    while (validMove(currentRow + 1, currentCol, currentShape)) {
+      currentRow++;
+    }
+    placeShape();
+    clearLines();
+    newShape();
   }
 
   private void calculateGhostPiece() {
