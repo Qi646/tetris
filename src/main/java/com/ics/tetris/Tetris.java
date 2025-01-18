@@ -37,6 +37,9 @@ public class Tetris extends Application {
   private int ghostRow;
   private Scene gameScene;
   private Stage primaryStageRef;
+  private Shape heldShape = null;
+  private int shapeId;
+  private boolean canHold = true;
 
   @Override
   public void start(Stage primaryStage) {
@@ -58,6 +61,7 @@ public class Tetris extends Application {
         case X -> rotate();
         case DOWN -> drop();
         case SPACE -> hardDrop();
+        case SHIFT -> hold();
         default -> {
         }
       }
@@ -110,7 +114,7 @@ public class Tetris extends Application {
     if (shapeBag.isEmpty() || bagIndex >= shapeBag.size()) {
       fillBag();
     }
-    int shapeId = shapeBag.get(bagIndex++);
+    shapeId = shapeBag.get(bagIndex++);
     int[][][] shapeRotations = SHAPES_ROTATIONS[shapeId];
     currentShape = new Shape(shapeRotations);
     currentRow = 0;
@@ -120,8 +124,9 @@ public class Tetris extends Application {
       currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2 - 1;
     }
     if (!validMove(currentRow, currentCol, currentShape.getCurrentData())) {
-      timeline.stop();
+      loseGame();
     }
+    canHold = true;
   }
 
   private void hardDrop() {
@@ -363,6 +368,31 @@ public class Tetris extends Application {
     int height() {
       return getCurrentData().length;
     }
+  }
+
+  private void hold() {
+    if (!canHold) {
+      return;
+    }
+    canHold = false;
+    if (heldShape == null) {
+      heldShape = currentShape;
+      newShape();
+    } else {
+      Shape temp = heldShape;
+      heldShape = currentShape;
+      currentShape = temp;
+      currentRow = 0;
+      if (shapeId == 0 || shapeId == 1) {
+        currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2;
+      } else {
+        currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2 - 1;
+      }
+      if (!validMove(currentRow, currentCol, currentShape.getCurrentData())) {
+        loseGame();
+      }
+    }
+    drawBoard();
   }
 
   public static void main(String[] args) {
