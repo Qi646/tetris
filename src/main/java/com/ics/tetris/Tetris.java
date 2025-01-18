@@ -9,6 +9,11 @@ import javafx.stage.Stage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Tetris extends Application {
@@ -22,6 +27,8 @@ public class Tetris extends Application {
   private int currentCol = BOARD_WIDTH / 2;
   private Group root;
   private Timeline timeline = new Timeline();
+  private List<Integer> shapeBag = new ArrayList<>();
+  private int bagIndex = 0;
 
   private static final int[][][] SHAPES = {
       // I
@@ -71,9 +78,18 @@ public class Tetris extends Application {
     timeline.play();
   }
 
+  private void fillBag() {
+    shapeBag = new ArrayList<>(Arrays.asList(0,1,2,3,4,5,6));
+    Collections.shuffle(shapeBag);
+    bagIndex = 0;
+  }
+
   private void newShape() {
-    Random r = new Random();
-    int[][] shapeData = SHAPES[r.nextInt(SHAPES.length)];
+    if (shapeBag.isEmpty() || bagIndex >= shapeBag.size()) {
+      fillBag();
+    }
+    int shapeId = shapeBag.get(bagIndex++);
+    int[][] shapeData = SHAPES[shapeId];
     currentShape = new Shape(shapeData);
     currentRow = 0;
     currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2;
