@@ -95,7 +95,11 @@ public class Tetris extends Application {
     int[][] shapeData = SHAPES[shapeId];
     currentShape = new Shape(shapeData);
     currentRow = 0;
-    currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2;
+    if (shapeId == 0 || shapeId == 1) { // I or O piece
+      currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2;
+    } else {
+      currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2 - 1;
+    }
     if (!validMove(currentRow, currentCol, currentShape)) {
       timeline.stop();
     }
