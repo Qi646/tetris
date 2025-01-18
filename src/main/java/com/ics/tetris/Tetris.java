@@ -94,21 +94,21 @@ public class Tetris extends Application {
       fillBag();
     }
     int shapeId = shapeBag.get(bagIndex++);
-    int[][] shapeData = SHAPES[shapeId];
-    currentShape = new Shape(shapeData);
+    int[][][] shapeRotations = SHAPES_ROTATIONS[shapeId];
+    currentShape = new Shape(shapeRotations);
     currentRow = 0;
     if (shapeId == 0 || shapeId == 1) { // I or O piece
       currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2;
     } else {
       currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2 - 1;
     }
-    if (!validMove(currentRow, currentCol, currentShape)) {
+    if (!validMove(currentRow, currentCol, currentShape.getCurrentData())) {
       timeline.stop();
     }
   }
 
   private void hardDrop() {
-    while (validMove(currentRow + 1, currentCol, currentShape)) {
+    while (validMove(currentRow + 1, currentCol, currentShape.getCurrentData())) {
       currentRow++;
     }
     placeShape();
@@ -118,7 +118,7 @@ public class Tetris extends Application {
 
   private void calculateGhostPiece() {
     ghostRow = currentRow;
-    while (validMove(ghostRow + 1, currentCol, currentShape)) {
+    while (validMove(ghostRow + 1, currentCol, currentShape.getCurrentData())) {
       ghostRow++;
     }
   }
@@ -145,7 +145,7 @@ public class Tetris extends Application {
     calculateGhostPiece();
     for (int r = 0; r < currentShape.height(); r++) {
       for (int c = 0; c < currentShape.width(); c++) {
-        int val = currentShape.data[r][c];
+        int val = currentShape.getCurrentData()[r][c];
         if (val != 0) {
           drawGhostTile(ghostRow + r, currentCol + c, val);
         }
@@ -155,7 +155,7 @@ public class Tetris extends Application {
     // Draw current piece
     for (int r = 0; r < currentShape.height(); r++) {
       for (int c = 0; c < currentShape.width(); c++) {
-        int val = currentShape.data[r][c];
+        int val = currentShape.getCurrentData()[r][c];
         if (val != 0) {
           drawTile(currentRow + r, currentCol + c, val);
         }
@@ -201,7 +201,7 @@ public class Tetris extends Application {
   }
 
   private void drop() {
-    if (validMove(currentRow + 1, currentCol, currentShape)) {
+    if (validMove(currentRow + 1, currentCol, currentShape.getCurrentData())) {
       currentRow++;
     } else {
       placeShape();
@@ -211,29 +211,33 @@ public class Tetris extends Application {
   }
 
   private void move(int delta) {
-    if (validMove(currentRow, currentCol + delta, currentShape)) {
+    if (validMove(currentRow, currentCol + delta, currentShape.getCurrentData())) {
       currentCol += delta;
     }
   }
 
   private void rotate() {
-    Shape rotated = currentShape.rotate();
-    if (validMove(currentRow, currentCol, rotated)) {
-      currentShape = rotated;
+    currentShape.rotate(true);
+    if (validMove(currentRow, currentCol, currentShape.getCurrentData())) {
+      // Rotation successful
+    } else {
+      currentShape.rotate(false); // Revert rotation
     }
   }
 
   private void rotateCounterClockwise() {
-    Shape rotated = currentShape.rotateCounterClockwise();
-    if (validMove(currentRow, currentCol, rotated)) {
-      currentShape = rotated;
+    currentShape.rotate(false);
+    if (validMove(currentRow, currentCol, currentShape.getCurrentData())) {
+      // Rotation successful
+    } else {
+      currentShape.rotate(true); // Revert rotation
     }
   }
 
-  private boolean validMove(int row, int col, Shape shape) {
-    for (int r = 0; r < shape.height(); r++) {
-      for (int c = 0; c < shape.width(); c++) {
-        if (shape.data[r][c] != 0) {
+  private boolean validMove(int row, int col, int[][] shapeData) {
+    for (int r = 0; r < shapeData.length; r++) {
+      for (int c = 0; c < shapeData[0].length; c++) {
+        if (shapeData[r][c] != 0) {
           int newR = row + r, newC = col + c;
           if (newC < 0 || newC >= BOARD_WIDTH ||
               newR < 0 || newR >= BOARD_HEIGHT ||
@@ -249,7 +253,7 @@ public class Tetris extends Application {
   private void placeShape() {
     for (int r = 0; r < currentShape.height(); r++) {
       for (int c = 0; c < currentShape.width(); c++) {
-        int val = currentShape.data[r][c];
+        int val = currentShape.getCurrentData()[r][c];
         if (val != 0) {
           board[currentRow + r][currentCol + c] = val;
           if (currentRow + r < 2) {
@@ -289,43 +293,82 @@ public class Tetris extends Application {
     }
   }
 
-  class Shape {
-    int[][] data;
+  private static final int[][][][] SHAPES_ROTATIONS = {
+      // I
+      {
+          { { 0, 0, 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
+          { { 0, 0, 1, 0 }, { 0, 0, 1, 0 }, { 0, 0, 1, 0 }, { 0, 0, 1, 0 } },
+          { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } },
+          { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 } }
+      },
+      // O
+      {
+          { { 2, 2 }, { 2, 2 } }
+      },
+      // T
+      {
+          { { 0, 3, 0 }, { 3, 3, 3 }, { 0, 0, 0 } },
+          { { 0, 3, 0 }, { 0, 3, 3 }, { 0, 3, 0 } },
+          { { 0, 0, 0 }, { 3, 3, 3 }, { 0, 3, 0 } },
+          { { 0, 3, 0 }, { 3, 3, 0 }, { 0, 3, 0 } }
+      },
+      // S
+      {
+          { { 0, 4, 4 }, { 4, 4, 0 }, { 0, 0, 0 } },
+          { { 0, 4, 0 }, { 0, 4, 4 }, { 0, 0, 4 } },
+          { { 0, 0, 0 }, { 0, 4, 4 }, { 4, 4, 0 } },
+          { { 4, 0, 0 }, { 4, 4, 0 }, { 0, 4, 0 } }
+      },
+      // Z
+      {
+          { { 5, 5, 0 }, { 0, 5, 5 }, { 0, 0, 0 } },
+          { { 0, 0, 5 }, { 0, 5, 5 }, { 0, 5, 0 } },
+          { { 0, 0, 0 }, { 5, 5, 0 }, { 0, 5, 5 } },
+          { { 0, 0, 5 }, { 5, 5, 0 }, { 5, 0, 0 } }
+      },
+      // J
+      {
+          { { 6, 0, 0 }, { 6, 6, 6 }, { 0, 0, 0 } },
+          { { 0, 6, 6 }, { 0, 6, 0 }, { 0, 6, 0 } },
+          { { 0, 0, 0 }, { 6, 6, 6 }, { 0, 0, 6 } },
+          { { 0, 6, 0 }, { 0, 6, 0 }, { 6, 6, 0 } }
+      },
+      // L
+      {
+          { { 0, 0, 7 }, { 7, 7, 7 }, { 0, 0, 0 } },
+          { { 0, 7, 0 }, { 0, 7, 0 }, { 0, 7, 7 } },
+          { { 0, 0, 0 }, { 7, 7, 7 }, { 7, 0, 0 } },
+          { { 7, 7, 0 }, { 0, 7, 0 }, { 0, 7, 0 } }
+      }
+  };
 
-    Shape(int[][] data) {
-      this.data = data;
+  class Shape {
+    int[][][] rotations;
+    int currentRotation;
+
+    Shape(int[][][] rotations) {
+      this.rotations = rotations;
+      this.currentRotation = 0;
+    }
+
+    int[][] getCurrentData() {
+      return rotations[currentRotation];
+    }
+
+    void rotate(boolean clockwise) {
+      if (clockwise) {
+        currentRotation = (currentRotation + 1) % rotations.length;
+      } else {
+        currentRotation = (currentRotation + rotations.length - 1) % rotations.length;
+      }
     }
 
     int width() {
-      return data[0].length;
+      return getCurrentData()[0].length;
     }
 
     int height() {
-      return data.length;
-    }
-
-    Shape rotate() {
-      int h = height();
-      int w = width();
-      int[][] rotated = new int[w][h];
-      for (int r = 0; r < h; r++) {
-        for (int c = 0; c < w; c++) {
-          rotated[c][h - 1 - r] = data[r][c];
-        }
-      }
-      return new Shape(rotated);
-    }
-
-    Shape rotateCounterClockwise() {
-      int h = height();
-      int w = width();
-      int[][] rotated = new int[w][h];
-      for (int r = 0; r < h; r++) {
-        for (int c = 0; c < w; c++) {
-          rotated[w - 1 - c][r] = data[r][c];
-        }
-      }
-      return new Shape(rotated);
+      return getCurrentData().length;
     }
   }
 
