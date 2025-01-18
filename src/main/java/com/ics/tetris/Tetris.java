@@ -16,13 +16,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Tetris extends Application {
   private static final int BOARD_WIDTH = 10;
@@ -45,6 +48,7 @@ public class Tetris extends Application {
   private boolean canHold = true;
   private static final java.util.TreeMap<Integer, String> highScores = new java.util.TreeMap<>(java.util.Collections.reverseOrder());
   private int linesCleared = 0;
+  private static final String HIGH_SCORES_FILE = "highscores.dat";
 
   @Override
   public void start(Stage primaryStage) {
@@ -54,6 +58,8 @@ public class Tetris extends Application {
     primaryStageRef.setScene(gameScene);
     primaryStageRef.setTitle("Tetris");
     primaryStageRef.show();
+
+    loadHighScores();
 
     newShape();
     drawBoard();
@@ -112,6 +118,8 @@ public class Tetris extends Application {
 
     Scene loseScene = new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
     primaryStageRef.setScene(loseScene);
+
+    saveHighScores();
   }
 
   private void restartGame() {
@@ -125,6 +133,23 @@ public class Tetris extends Application {
     drawBoard();
     primaryStageRef.setScene(gameScene);
     linesCleared = 0;
+  }
+
+  private void loadHighScores() {
+    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(HIGH_SCORES_FILE))) {
+        Map<Integer, String> loadedScores = (Map<Integer, String>) ois.readObject();
+        highScores.putAll(loadedScores);
+    } catch (IOException | ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+  }
+
+  private void saveHighScores() {
+    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(HIGH_SCORES_FILE))) {
+        oos.writeObject(highScores);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
   }
 
   private void fillBag() {
@@ -312,7 +337,7 @@ public class Tetris extends Application {
         }
       }
       if (full) {
-        linesCleared++; // track cleared lines
+        linesCleared++;
         for (int rr = r; rr > 0; rr--) {
           board[rr] = board[rr - 1].clone();
         }
