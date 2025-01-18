@@ -40,10 +40,10 @@ public class Tetris extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    this.primaryStageRef = primaryStage; // Assign the primary stage
+    this.primaryStageRef = primaryStage;
     root = new Group();
     gameScene = new Scene(root, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
-    primaryStageRef.setScene(gameScene); // Use the stored stage
+    primaryStageRef.setScene(gameScene);
     primaryStageRef.setTitle("Tetris");
     primaryStageRef.show();
 
@@ -85,7 +85,7 @@ public class Tetris extends Application {
     losePane.setStyle("-fx-background-color: white;");
 
     Scene loseScene = new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
-    primaryStageRef.setScene(loseScene); // Use the stored stage
+    primaryStageRef.setScene(loseScene);
   }
 
   private void restartGame() {
@@ -97,8 +97,7 @@ public class Tetris extends Application {
     newShape();
     timeline.play();
     drawBoard();
-
-    primaryStageRef.setScene(gameScene); // Use the stored stage
+    primaryStageRef.setScene(gameScene);
   }
 
   private void fillBag() {
@@ -115,7 +114,7 @@ public class Tetris extends Application {
     int[][][] shapeRotations = SHAPES_ROTATIONS[shapeId];
     currentShape = new Shape(shapeRotations);
     currentRow = 0;
-    if (shapeId == 0 || shapeId == 1) { // I or O piece
+    if (shapeId == 0 || shapeId == 1) {
       currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2;
     } else {
       currentCol = BOARD_WIDTH / 2 - currentShape.width() / 2 - 1;
@@ -150,7 +149,6 @@ public class Tetris extends Application {
 
   private void drawBoard() {
     root.getChildren().clear();
-    // Draw placed tiles
     for (int r = 0; r < BOARD_HEIGHT; r++) {
       for (int c = 0; c < BOARD_WIDTH; c++) {
         if (board[r][c] != 0) {
@@ -159,7 +157,6 @@ public class Tetris extends Application {
       }
     }
 
-    // Calculate and draw ghost piece
     calculateGhostPiece();
     for (int r = 0; r < currentShape.height(); r++) {
       for (int c = 0; c < currentShape.width(); c++) {
@@ -170,7 +167,6 @@ public class Tetris extends Application {
       }
     }
 
-    // Draw current piece
     for (int r = 0; r < currentShape.height(); r++) {
       for (int c = 0; c < currentShape.width(); c++) {
         int val = currentShape.getCurrentData()[r][c];
@@ -180,9 +176,7 @@ public class Tetris extends Application {
       }
     }
 
-    // Add grid lines for all rows
     for (int r = 0; r < BOARD_HEIGHT; r++) {
-      // Draw horizontal lines
       Line horizontalLine = new Line(0, r * TILE_SIZE, BOARD_WIDTH * TILE_SIZE, r * TILE_SIZE);
       if (r == 2) {
         horizontalLine.setStroke(Color.RED);
@@ -192,7 +186,6 @@ public class Tetris extends Application {
       root.getChildren().add(horizontalLine);
     }
     for (int c = 0; c < BOARD_WIDTH; c++) {
-      // Draw vertical lines
       Line verticalLine = new Line(c * TILE_SIZE, 0, c * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
       verticalLine.setStroke(Color.LIGHTGRAY);
       root.getChildren().add(verticalLine);
@@ -201,13 +194,13 @@ public class Tetris extends Application {
 
   private Color tileColor(int val) {
     return switch (val) {
-      case 1 -> Color.CYAN; // I
-      case 2 -> Color.YELLOW; // O
-      case 3 -> Color.PURPLE; // T
-      case 4 -> Color.GREEN; // S
-      case 5 -> Color.RED; // Z
-      case 6 -> Color.BLUE; // J
-      case 7 -> Color.ORANGE; // L
+      case 1 -> Color.CYAN;
+      case 2 -> Color.YELLOW;
+      case 3 -> Color.PURPLE;
+      case 4 -> Color.GREEN;
+      case 5 -> Color.RED;
+      case 6 -> Color.BLUE;
+      case 7 -> Color.ORANGE;
       default -> Color.GRAY;
     };
   }
@@ -237,18 +230,16 @@ public class Tetris extends Application {
   private void rotate() {
     currentShape.rotate(true);
     if (validMove(currentRow, currentCol, currentShape.getCurrentData())) {
-      // Rotation successful
     } else {
-      currentShape.rotate(false); // Revert rotation
+      currentShape.rotate(false);
     }
   }
 
   private void rotateCounterClockwise() {
     currentShape.rotate(false);
     if (validMove(currentRow, currentCol, currentShape.getCurrentData())) {
-      // Rotation successful
     } else {
-      currentShape.rotate(true); // Revert rotation
+      currentShape.rotate(true);
     }
   }
 
@@ -303,46 +294,39 @@ public class Tetris extends Application {
   }
 
   private static final int[][][][] SHAPES_ROTATIONS = {
-      // I
       {
           { { 0, 0, 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
           { { 0, 0, 1, 0 }, { 0, 0, 1, 0 }, { 0, 0, 1, 0 }, { 0, 0, 1, 0 } },
           { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } },
           { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 } }
       },
-      // O
       {
           { { 2, 2 }, { 2, 2 } }
       },
-      // T
       {
           { { 0, 3, 0 }, { 3, 3, 3 }, { 0, 0, 0 } },
           { { 0, 3, 0 }, { 0, 3, 3 }, { 0, 3, 0 } },
           { { 0, 0, 0 }, { 3, 3, 3 }, { 0, 3, 0 } },
           { { 0, 3, 0 }, { 3, 3, 0 }, { 0, 3, 0 } }
       },
-      // S
       {
           { { 0, 4, 4 }, { 4, 4, 0 }, { 0, 0, 0 } },
           { { 0, 4, 0 }, { 0, 4, 4 }, { 0, 0, 4 } },
           { { 0, 0, 0 }, { 0, 4, 4 }, { 4, 4, 0 } },
           { { 4, 0, 0 }, { 4, 4, 0 }, { 0, 4, 0 } }
       },
-      // Z
       {
           { { 5, 5, 0 }, { 0, 5, 5 }, { 0, 0, 0 } },
           { { 0, 0, 5 }, { 0, 5, 5 }, { 0, 5, 0 } },
           { { 0, 0, 0 }, { 5, 5, 0 }, { 0, 5, 5 } },
           { { 0, 5, 0 }, { 5, 5, 0 }, { 5, 0, 0 } }
       },
-      // J
       {
           { { 6, 0, 0 }, { 6, 6, 6 }, { 0, 0, 0 } },
           { { 0, 6, 6 }, { 0, 6, 0 }, { 0, 6, 0 } },
           { { 0, 0, 0 }, { 6, 6, 6 }, { 0, 0, 6 } },
           { { 0, 6, 0 }, { 0, 6, 0 }, { 6, 6, 0 } }
       },
-      // L
       {
           { { 0, 0, 7 }, { 7, 7, 7 }, { 0, 0, 0 } },
           { { 0, 7, 0 }, { 0, 7, 0 }, { 0, 7, 7 } },
