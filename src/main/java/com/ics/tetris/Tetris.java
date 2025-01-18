@@ -1,14 +1,17 @@
 package com.ics.tetris;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -32,19 +35,22 @@ public class Tetris extends Application {
   private List<Integer> shapeBag = new ArrayList<>();
   private int bagIndex = 0;
   private int ghostRow;
+  private Scene gameScene;
+  private Stage primaryStageRef;
 
   @Override
   public void start(Stage primaryStage) {
+    this.primaryStageRef = primaryStage; // Assign the primary stage
     root = new Group();
-    Scene scene = new Scene(root, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
-    primaryStage.setScene(scene);
-    primaryStage.setTitle("Tetris");
-    primaryStage.show();
+    gameScene = new Scene(root, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+    primaryStageRef.setScene(gameScene); // Use the stored stage
+    primaryStageRef.setTitle("Tetris");
+    primaryStageRef.show();
 
     newShape();
     drawBoard();
 
-    scene.setOnKeyPressed(e -> {
+    gameScene.setOnKeyPressed(e -> {
       switch (e.getCode()) {
         case LEFT -> move(-1);
         case RIGHT -> move(1);
@@ -64,6 +70,35 @@ public class Tetris extends Application {
       drawBoard();
     }));
     timeline.play();
+  }
+
+  private void loseGame() {
+    timeline.stop();
+    Label loseLabel = new Label("Thanks for playing!");
+    loseLabel.setStyle("-fx-font-size: 22; -fx-text-fill: blue;");
+    Button replayButton = new Button("Replay");
+    replayButton.setOnAction(e -> restartGame());
+
+    VBox losePane = new VBox(20, loseLabel, replayButton);
+    losePane.setAlignment(Pos.CENTER);
+    losePane.setPadding(new Insets(20));
+    losePane.setStyle("-fx-background-color: white;");
+
+    Scene loseScene = new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+    primaryStageRef.setScene(loseScene); // Use the stored stage
+  }
+
+  private void restartGame() {
+    board = new int[BOARD_HEIGHT][BOARD_WIDTH];
+    currentRow = 0;
+    currentCol = BOARD_WIDTH / 2;
+    shapeBag.clear();
+    fillBag();
+    newShape();
+    timeline.play();
+    drawBoard();
+
+    primaryStageRef.setScene(gameScene); // Use the stored stage
   }
 
   private void fillBag() {
@@ -246,15 +281,6 @@ public class Tetris extends Application {
         }
       }
     }
-  }
-
-  private void loseGame() {
-    timeline.stop();
-    Stage stage = (Stage) root.getScene().getWindow();
-    Label loseLabel = new Label("Thanks for playing!");
-    loseLabel.setStyle("-fx-font-size: 22; -fx-text-fill: blue;");
-    StackPane losePane = new StackPane(loseLabel);
-    stage.setScene(new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE));
   }
 
   private void clearLines() {
