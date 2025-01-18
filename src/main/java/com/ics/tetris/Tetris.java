@@ -33,23 +33,6 @@ public class Tetris extends Application {
   private int bagIndex = 0;
   private int ghostRow;
 
-  private static final int[][][] SHAPES = {
-      // I
-      { { 1, 1, 1, 1 } },
-      // O
-      { { 2, 2 }, { 2, 2 } },
-      // T
-      { { 0, 3, 0 }, { 3, 3, 3 } },
-      // S
-      { { 0, 4, 4 }, { 4, 4, 0 } },
-      // Z
-      { { 5, 5, 0 }, { 0, 5, 5 } },
-      // J
-      { { 6, 0, 0 }, { 6, 6, 6 } },
-      // L
-      { { 0, 0, 7 }, { 7, 7, 7 } }
-  };
-
   @Override
   public void start(Stage primaryStage) {
     root = new Group();
