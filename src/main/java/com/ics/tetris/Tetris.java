@@ -47,6 +47,7 @@ public class Tetris extends Application {
     primaryStageRef.setTitle("Tetris");
     primaryStageRef.show();
 
+    setupGrid();
     newShape();
     drawBoard();
 
@@ -70,6 +71,23 @@ public class Tetris extends Application {
       drawBoard();
     }));
     timeline.play();
+  }
+
+  private void setupGrid() {
+    for (int r = 0; r < BOARD_HEIGHT; r++) {
+      Line horizontalLine = new Line(0, r * TILE_SIZE, BOARD_WIDTH * TILE_SIZE, r * TILE_SIZE);
+      if (r == 2) {
+        horizontalLine.setStroke(Color.RED);
+      } else {
+        horizontalLine.setStroke(Color.LIGHTGRAY);
+      }
+      root.getChildren().add(horizontalLine);
+    }
+    for (int c = 0; c < BOARD_WIDTH; c++) {
+      Line verticalLine = new Line(c * TILE_SIZE, 0, c * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+      verticalLine.setStroke(Color.LIGHTGRAY);
+      root.getChildren().add(verticalLine);
+    }
   }
 
   private void loseGame() {
@@ -148,6 +166,7 @@ public class Tetris extends Application {
   }
 
   private void drawBoard() {
+    root.getChildren().removeIf(node -> node instanceof Rectangle);
     root.getChildren().clear();
     for (int r = 0; r < BOARD_HEIGHT; r++) {
       for (int c = 0; c < BOARD_WIDTH; c++) {
