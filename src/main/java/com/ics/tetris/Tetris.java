@@ -19,7 +19,10 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Tetris extends Application {
   private static final int BOARD_WIDTH = 10;
@@ -40,6 +43,8 @@ public class Tetris extends Application {
   private Shape heldShape = null;
   private int shapeId;
   private boolean canHold = true;
+  private static final java.util.TreeMap<Integer, String> highScores = new java.util.TreeMap<>(java.util.Collections.reverseOrder());
+  private int linesCleared = 0;
 
   @Override
   public void start(Stage primaryStage) {
@@ -78,8 +83,15 @@ public class Tetris extends Application {
 
   private void loseGame() {
     timeline.stop();
+    highScores.put(linesCleared, "Player");
+
+    while (highScores.size() > 5) {
+      highScores.pollLastEntry();
+    }
+
     Label loseLabel = new Label("Thanks for playing!");
     loseLabel.setStyle("-fx-font-size: 22; -fx-text-fill: blue;");
+
     Button replayButton = new Button("Replay");
     replayButton.setOnAction(e -> restartGame());
 
@@ -87,6 +99,16 @@ public class Tetris extends Application {
     losePane.setAlignment(Pos.CENTER);
     losePane.setPadding(new Insets(20));
     losePane.setStyle("-fx-background-color: white;");
+
+    Label highScoresLabel = new Label("High Scores:");
+    highScoresLabel.setStyle("-fx-font-size: 18; -fx-text-fill: black;");
+    losePane.getChildren().add(highScoresLabel);
+
+    for (Map.Entry<Integer, String> entry : highScores.entrySet()) {
+      Label scoreLabel = new Label(entry.getValue() + ": " + entry.getKey() + " lines");
+      scoreLabel.setStyle("-fx-font-size: 16; -fx-text-fill: black;");
+      losePane.getChildren().add(scoreLabel);
+    }
 
     Scene loseScene = new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
     primaryStageRef.setScene(loseScene);
@@ -102,6 +124,7 @@ public class Tetris extends Application {
     timeline.play();
     drawBoard();
     primaryStageRef.setScene(gameScene);
+    linesCleared = 0;
   }
 
   private void fillBag() {
@@ -289,6 +312,7 @@ public class Tetris extends Application {
         }
       }
       if (full) {
+        linesCleared++; // track cleared lines
         for (int rr = r; rr > 0; rr--) {
           board[rr] = board[rr - 1].clone();
         }
