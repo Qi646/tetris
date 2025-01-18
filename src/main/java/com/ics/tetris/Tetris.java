@@ -1,8 +1,5 @@
 package com.ics.tetris;
 
-import com.ics.tetris.Shape;
-import com.ics.tetris.HighScoreManager;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,11 +16,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,7 +43,6 @@ public class Tetris extends Application {
   private boolean canHold = true;
   private static final java.util.TreeMap<Integer, String> highScores = new java.util.TreeMap<>(java.util.Collections.reverseOrder());
   private int linesCleared = 0;
-  private static final String HIGH_SCORES_FILE = "highscores.dat";
 
   @Override
   public void start(Stage primaryStage) {
