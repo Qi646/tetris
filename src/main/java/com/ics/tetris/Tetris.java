@@ -3,6 +3,8 @@ package com.ics.tetris;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -14,11 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Tetris extends Application {
   private static final int BOARD_WIDTH = 10;
-  private static final int BOARD_HEIGHT = 20;
+  private static final int BOARD_HEIGHT = 22;
   private static final int TILE_SIZE = 30;
 
   private int[][] board = new int[BOARD_HEIGHT][BOARD_WIDTH];
@@ -183,6 +184,15 @@ public class Tetris extends Application {
         int val = currentShape.data[r][c];
         if (val != 0) {
           board[currentRow + r][currentCol + c] = val;
+          if (currentRow + r < 2) {
+            timeline.stop();
+            Stage stage = (Stage) root.getScene().getWindow();
+            Label loseLabel = new Label("Thanks for playing!");
+            loseLabel.setStyle("-fx-font-size: 22; -fx-text-fill: blue;");
+            StackPane losePane = new StackPane(loseLabel);
+            stage.setScene(new Scene(losePane, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE));
+            return;
+          }
         }
       }
     }
