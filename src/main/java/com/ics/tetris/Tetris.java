@@ -65,9 +65,10 @@ public class Tetris extends Application {
       switch (e.getCode()) {
         case LEFT -> move(-1);
         case RIGHT -> move(1);
-        case UP -> rotate();
+        case Z -> rotateCounterClockwise();
+        case X -> rotate();
         case DOWN -> drop();
-        case SPACE -> hardDrop(); // Added hard drop
+        case SPACE -> hardDrop();
         default -> {
         }
       }
@@ -222,6 +223,13 @@ public class Tetris extends Application {
     }
   }
 
+  private void rotateCounterClockwise() {
+    Shape rotated = currentShape.rotateCounterClockwise();
+    if (validMove(currentRow, currentCol, rotated)) {
+      currentShape = rotated;
+    }
+  }
+
   private boolean validMove(int row, int col, Shape shape) {
     for (int r = 0; r < shape.height(); r++) {
       for (int c = 0; c < shape.width(); c++) {
@@ -303,6 +311,18 @@ public class Tetris extends Application {
       for (int r = 0; r < h; r++) {
         for (int c = 0; c < w; c++) {
           rotated[c][h - 1 - r] = data[r][c];
+        }
+      }
+      return new Shape(rotated);
+    }
+
+    Shape rotateCounterClockwise() {
+      int h = height();
+      int w = width();
+      int[][] rotated = new int[w][h];
+      for (int r = 0; r < h; r++) {
+        for (int c = 0; c < w; c++) {
+          rotated[w - 1 - c][r] = data[r][c];
         }
       }
       return new Shape(rotated);
