@@ -166,7 +166,6 @@ public class Tetris extends Application {
   }
 
   private void drawBoard() {
-    root.getChildren().removeIf(node -> node instanceof Rectangle);
     root.getChildren().clear();
     for (int r = 0; r < BOARD_HEIGHT; r++) {
       for (int c = 0; c < BOARD_WIDTH; c++) {
