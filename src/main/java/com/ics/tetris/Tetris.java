@@ -166,6 +166,8 @@ public class Tetris extends Application {
     shapeBag.clear();
     fillBag();
     newShape();
+    heldShape = null;
+    canHold = true;
     timeline.play();
     drawBoard();
     primaryStageRef.setScene(gameScene);
