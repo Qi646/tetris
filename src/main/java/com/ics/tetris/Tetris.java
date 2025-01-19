@@ -275,7 +275,6 @@ public class Tetris extends Application {
     if (heldShape == null) {
       return;
     }
-    // Offset so it shows to the right of the main board
     int offsetX = (BOARD_WIDTH * TILE_SIZE) + 20;
     int offsetY = 20;
 
