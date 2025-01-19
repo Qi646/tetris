@@ -43,6 +43,7 @@ public class Tetris extends Application {
   private boolean canHold = true;
   private static final java.util.TreeMap<Integer, String> highScores = new java.util.TreeMap<>(java.util.Collections.reverseOrder());
   private int linesCleared = 0;
+  private Group holdGroup = new Group();
 
   private static final int[][][][] SHAPES_ROTATIONS = {
       {
@@ -90,7 +91,7 @@ public class Tetris extends Application {
   public void start(Stage primaryStage) {
     this.primaryStageRef = primaryStage;
     root = new Group();
-    gameScene = new Scene(root, BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
+    gameScene = new Scene(root, (BOARD_WIDTH * TILE_SIZE) + 175, BOARD_HEIGHT * TILE_SIZE);
     primaryStageRef.setScene(gameScene);
     primaryStageRef.setTitle("Tetris");
     primaryStageRef.show();
@@ -261,6 +262,33 @@ public class Tetris extends Application {
       Line verticalLine = new Line(c * TILE_SIZE, 0, c * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE);
       verticalLine.setStroke(Color.LIGHTGRAY);
       root.getChildren().add(verticalLine);
+    }
+
+    root.getChildren().add(holdGroup);
+    drawHoldShape();
+  }
+
+  private void drawHoldShape() {
+    holdGroup.getChildren().clear();
+    if (heldShape == null) {
+      return;
+    }
+    // Offset so it shows to the right of the main board
+    int offsetX = (BOARD_WIDTH * TILE_SIZE) + 20;
+    int offsetY = 20;
+
+    for (int r = 0; r < heldShape.height(); r++) {
+      for (int c = 0; c < heldShape.width(); c++) {
+        int val = heldShape.getCurrentData()[r][c];
+        if (val != 0) {
+          Rectangle rect = new Rectangle(
+              offsetX + c * TILE_SIZE,
+              offsetY + r * TILE_SIZE,
+              TILE_SIZE, TILE_SIZE);
+          rect.setFill(tileColor(val));
+          holdGroup.getChildren().add(rect);
+        }
+      }
     }
   }
 
