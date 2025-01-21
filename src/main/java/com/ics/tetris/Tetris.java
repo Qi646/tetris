@@ -87,6 +87,115 @@ public class Tetris extends Application {
       }
   };
 
+  private final int[][][][][] kickTable = {
+    // I Tetromino
+    {
+        // Clockwise (0 -> 1, 1 -> 2, 2 -> 3, 3 -> 0)
+        {
+            {{0, 0}, {2, 0}, {-1, 0}, {1, 0}}, // 0 -> 1
+            {{0, 0}, {-2, 0}, {1, 0}, {-1, 0}}, // 1 -> 2
+            {{0, 0}, {-2, 0}, {1, 0}, {-1, 0}}, // 2 -> 3
+            {{0, 0}, {2, 0}, {-1, 0}, {1, 0}}, // 3 -> 0
+        },
+        // Counter-clockwise (0 -> 3, 3 -> 2, 2 -> 1, 1 -> 0)
+        {
+            {{0, 0}, {2, 0}, {-1, 0}, {1, 0}}, // 0 -> 3
+            {{0, 0}, {-2, 0}, {1, 0}, {-1, 0}}, // 3 -> 2
+            {{0, 0}, {-2, 0}, {1, 0}, {-1, 0}}, // 2 -> 1
+            {{0, 0}, {2, 0}, {-1, 0}, {1, 0}}, // 1 -> 0
+        }
+    },
+
+    {
+        {
+            {{0, 0}},
+            {{0, 0}},
+            {{0, 0}},
+            {{0, 0}},
+        },
+        {
+            {{0, 0}},
+            {{0, 0}},
+            {{0, 0}},
+            {{0, 0}},
+        }
+    },
+    {
+        {
+            {{0, 0}, {1, 0}, {-1, 0}, {0, 1}},
+            {{0, 0}, {0, -2}, {1, 0}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {1, 0}, {0, -1}}, 
+            {{0, 0}, {0, 2}, {-1, 0}, {0, -1}}, 
+        },
+        
+        {
+            {{0, 0}, {1, 0}, {-1, 0}, {0, -1}}, 
+            {{0, 0}, {0, 2}, {-1, 0}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {1, 0}, {0, 1}}, 
+            {{0, 0}, {0, -2}, {1, 0}, {0, 1}}, 
+        }
+    },
+    
+    {
+        {
+            {{0, 0}, {0, 1}, {1, 0}, {-1, 1}}, 
+            {{0, 0}, {1, 0}, {0, -1}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {0, -1}, {1, -1}},
+            {{0, 0}, {1, 0}, {0, 1}, {0, -1}}, 
+        },
+        {
+            {{0, 0}, {0, 1}, {1, 0}, {-1, 1}}, 
+            {{0, 0}, {1, 0}, {0, -1}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {0, -1}, {1, -1}},
+            {{0, 0}, {1, 0}, {0, 1}, {0, -1}}, 
+        }
+    },
+    {
+        {
+            {{0, 0}, {0, 1}, {1, 0}, {-1, 1}}, 
+            {{0, 0}, {1, 0}, {0, -1}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {0, -1}, {1, -1}},
+            {{0, 0}, {1, 0}, {0, 1}, {0, -1}}, 
+        },
+        {
+            {{0, 0}, {0, 1}, {1, 0}, {-1, 1}}, 
+            {{0, 0}, {1, 0}, {0, -1}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {0, -1}, {1, -1}},
+            {{0, 0}, {1, 0}, {0, 1}, {0, -1}}, 
+        }
+    },
+    {
+        {
+            {{0, 0}, {1, 0}, {-1, 0}, {0, 1}}, 
+            {{0, 0}, {0, -2}, {1, 0}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {1, 0}, {0, -1}}, 
+            {{0, 0}, {0, 2}, {-1, 0}, {0, -1}}, 
+        },
+        {
+            {{0, 0}, {1, 0}, {-1, 0}, {0, -1}}, 
+            {{0, 0}, {0, 2}, {-1, 0}, {0, 1}}, 
+            {{0, 0}, {-1, 0}, {1, 0}, {0, 1}}, 
+            {{0, 0}, {0, -2}, {1, 0}, {0, -1}}, 
+        }
+    },
+
+    {
+        {
+            {{0, 0}, {-1, 0}, {1, 0}, {0, -1}}, 
+            {{0, 0}, {0, -2}, {1, 0}, {0, -1}}, 
+            {{0, 0}, {-1, 0}, {1, 0}, {0, 1}},  
+            {{0, 0}, {0, 2}, {-1, 0}, {0, 1}},  
+        },
+        {
+            {{0, 0}, {-1, 0}, {1, 0}, {0, 1}},  
+            {{0, 0}, {0, 2}, {-1, 0}, {0, -1}}, 
+            {{0, 0}, {1, 0}, {-1, 0}, {0, -1}}, 
+            {{0, 0}, {0, -2}, {1, 0}, {0, 1}},  
+        }
+    },
+};
+
+
   @Override
   public void start(Stage primaryStage) {
     this.primaryStageRef = primaryStage;
@@ -329,20 +438,43 @@ public class Tetris extends Application {
   }
 
   private void rotate() {
+    int currentRotation = currentShape.currentRotation;
     currentShape.rotate(true);
-    if (validMove(currentRow, currentCol, currentShape.getCurrentData())) {
-    } else {
-      currentShape.rotate(false);
-    }
-  }
 
-  private void rotateCounterClockwise() {
-    currentShape.rotate(false);
-    if (validMove(currentRow, currentCol, currentShape.getCurrentData())) {
-    } else {
-      currentShape.rotate(true);
+    if (!validMove(currentRow, currentCol, currentShape.getCurrentData())) {
+        for (int[] kick : kickTable[shapeId][0][currentRotation]) {
+            int newRow = currentRow + kick[0];
+            int newCol = currentCol + kick[1];
+
+            if (validMove(newRow, newCol, currentShape.getCurrentData())) {
+                currentRow = newRow;
+                currentCol = newCol;
+                return;
+            }
+        }
+        currentShape.rotate(false);
     }
-  }
+}
+
+private void rotateCounterClockwise() {
+    int currentRotation = currentShape.currentRotation;
+    currentShape.rotate(false);
+
+    if (!validMove(currentRow, currentCol, currentShape.getCurrentData())) {
+        for (int[] kick : kickTable[shapeId][1][currentRotation]) {
+            int newRow = currentRow + kick[0];
+            int newCol = currentCol + kick[1];
+
+            if (validMove(newRow, newCol, currentShape.getCurrentData())) {
+                currentRow = newRow;
+                currentCol = newCol;
+                return;
+            }
+        }
+        currentShape.rotate(true);
+    }
+}
+
 
   private boolean validMove(int row, int col, int[][] shapeData) {
     for (int r = 0; r < shapeData.length; r++) {
